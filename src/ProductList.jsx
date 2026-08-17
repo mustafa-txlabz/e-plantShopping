@@ -1,5 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { addToCart, selectCartItems } from './CartSlice';
+import { addItem, selectCartItems } from './CartSlice';
+import NavBar from './components/nab';
 
 const plants = [
   {
@@ -82,49 +83,52 @@ export default function ProductList() {
   const dispatch = useDispatch();
   const cartItems = useSelector(selectCartItems);
 
-  const handleAddToCart = (plant) => {
-    dispatch(addToCart(plant));
+  const handleaddItem = (plant) => {
+    dispatch(addItem(plant));
   };
 
   return (
-    <section className="product-page">
-      <div className="section-heading">
-        <h2>Plant Collection</h2>
-        <p>Find the perfect greenery for every room in your home.</p>
-      </div>
+    <>
+      <NavBar />
+      <section className="product-page">
+        <div className="section-heading">
+          <h2>Plant Collection</h2>
+          <p>Find the perfect greenery for every room in your home.</p>
+        </div>
 
-      {categories.map((category) => {
-        const categoryPlants = plants.filter((plant) => plant.category === category);
+        {categories.map((category) => {
+          const categoryPlants = plants.filter((plant) => plant.category === category);
 
-        return (
-          <div key={category} className="category-section">
-            <h3>{category}</h3>
-            <div className="product-grid">
-              {categoryPlants.map((plant) => {
-                const isInCart = cartItems.some((item) => item.id === plant.id);
+          return (
+            <div key={category} className="category-section">
+              <h3>{category}</h3>
+              <div className="product-grid">
+                {categoryPlants.map((plant) => {
+                  const isInCart = cartItems.some((item) => item.id === plant.id);
 
-                return (
-                  <article key={plant.id} className="plant-card">
-                    <img src={plant.image} alt={plant.name} className="plant-image" />
-                    <div className="plant-details">
-                      <h4>{plant.name}</h4>
-                      <p>$ {plant.price.toFixed(2)}</p>
-                    </div>
-                    <button
-                      type="button"
-                      className="add-to-cart-btn"
-                      onClick={() => handleAddToCart(plant)}
-                      disabled={isInCart}
-                    >
-                      {isInCart ? 'Added to Cart' : 'Add to Cart'}
-                    </button>
-                  </article>
-                );
-              })}
+                  return (
+                    <article key={plant.id} className="plant-card">
+                      <img src={plant.image} alt={plant.name} className="plant-image" />
+                      <div className="plant-details">
+                        <h4>{plant.name}</h4>
+                        <p>$ {plant.price.toFixed(2)}</p>
+                      </div>
+                      <button
+                        type="button"
+                        className="add-to-cart-btn"
+                        onClick={() => handleaddItem(plant)}
+                        disabled={isInCart}
+                      >
+                        {isInCart ? 'Added to Cart' : 'Add to Cart'}
+                      </button>
+                    </article>
+                  );
+                })}
+              </div>
             </div>
-          </div>
-        );
-      })}
-    </section>
+          );
+        })}
+      </section>
+    </>
   );
 }
