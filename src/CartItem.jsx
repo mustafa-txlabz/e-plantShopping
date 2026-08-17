@@ -7,13 +7,40 @@ import {
   selectCartItems,
   selectCartTotal
 } from './CartSlice';
-import NavBar from './components/nab';
 
+function NavBar() {
+  const cartCount = useSelector(selectCartCount);
+
+  return (
+    <header className="site-header">
+      <Link to="/" className="nav-brand">
+        Paradise Nursery
+      </Link>
+
+      <nav className="nav-links" aria-label="Main navigation">
+        <Link to="/">Home</Link>
+        <Link to="/plants">Plants</Link>
+        <Link to="/cart">Cart</Link>
+      </nav>
+
+      <Link to="/cart" className="cart-button" aria-label={`Shopping cart with ${cartCount} items`}>
+        <span className="cart-icon">🛒</span>
+        <span className="cart-count">{cartCount}</span>
+      </Link>
+    </header>
+  );
+}
+const calculateTotal = (items) => {
+  return items.reduce(
+    (total, item) => total + item.price * item.quantity,
+    0
+  );
+};
 export default function CartItem() {
   const dispatch = useDispatch();
   const cartItems = useSelector(selectCartItems);
   const totalItems = useSelector(selectCartCount);
-  const totalCost = useSelector(selectCartTotal);
+  const totalCost = calculateTotal(cartItems);
 
   const handleCheckout = () => {
     alert('Coming Soon');
@@ -76,7 +103,7 @@ export default function CartItem() {
                         dispatch(
                           updateQuantity({
                             id: item.id,
-                            quantity: item.quantity + 1
+                            quantity: item.quantity - 1
                           })
                         )
                       }

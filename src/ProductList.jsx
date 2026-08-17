@@ -1,6 +1,29 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { addItem, selectCartItems } from './CartSlice';
-import NavBar from './components/nab';
+import { Link } from 'react-router-dom';
+import { addItem, selectCartItems, selectCartCount } from './CartSlice';
+
+function NavBar() {
+  const cartCount = useSelector(selectCartCount);
+
+  return (
+    <header className="site-header">
+      <Link to="/" className="nav-brand">
+        Paradise Nursery
+      </Link>
+
+      <nav className="nav-links" aria-label="Main navigation">
+        <Link to="/">Home</Link>
+        <Link to="/plants">Plants</Link>
+        <Link to="/cart">Cart</Link>
+      </nav>
+
+      <Link to="/cart" className="cart-button" aria-label={`Shopping cart with ${cartCount} items`}>
+        <span className="cart-icon">🛒</span>
+        <span className="cart-count">{cartCount}</span>
+      </Link>
+    </header>
+  );
+}
 
 const plants = [
   {
@@ -79,7 +102,7 @@ const plants = [
 
 const categories = ['Low Light', 'Air Purifying', 'Easy Care', 'Statement'];
 
-export default function ProductList() {
+export default function ProductList({ showProductList }) {
   const dispatch = useDispatch();
   const cartItems = useSelector(selectCartItems);
 

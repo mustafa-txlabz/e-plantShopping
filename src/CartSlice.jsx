@@ -20,9 +20,12 @@ const cartSlice = createSlice({
     },
     updateQuantity: (state, action) => {
       const { id, quantity } = action.payload;
+
       const item = state.cart.find((cartItem) => cartItem.id === id);
 
-      if (!item) return;
+      if (!item) {
+        return;
+      }
 
       if (quantity <= 0) {
         state.cart = state.cart.filter((cartItem) => cartItem.id !== id);
