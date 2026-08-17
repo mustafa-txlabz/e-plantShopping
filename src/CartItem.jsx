@@ -1,0 +1,88 @@
+import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
+import {
+  decreaseQuantity,
+  increaseQuantity,
+  removeFromCart,
+  selectCartCount,
+  selectCartItems,
+  selectCartTotal
+} from './CartSlice';
+
+export default function CartItem() {
+  const dispatch = useDispatch();
+  const cartItems = useSelector(selectCartItems);
+  const totalItems = useSelector(selectCartCount);
+  const totalCost = useSelector(selectCartTotal);
+
+  const handleCheckout = () => {
+    alert('Coming Soon');
+  };
+
+  return (
+    <section className="cart-page">
+      <div className="cart-header-row">
+        <div>
+          <h2>Your Cart</h2>
+          <p>{totalItems} plants selected</p>
+        </div>
+        <div className="cart-summary-box">
+          <span>Total</span>
+          <strong>$ {totalCost.toFixed(2)}</strong>
+        </div>
+      </div>
+
+      {cartItems.length === 0 ? (
+        <div className="empty-cart">
+          <p>Your shopping cart is empty.</p>
+          <Link to="/plants" className="continue-shopping-btn">
+            Continue Shopping
+          </Link>
+        </div>
+      ) : (
+        <>
+          <div className="cart-items-list">
+            {cartItems.map((item) => (
+              <article key={item.id} className="cart-item">
+                <img src={item.image} alt={item.name} className="cart-item-image" />
+
+                <div className="cart-item-info">
+                  <h3>{item.name}</h3>
+                  <p>Unit price: $ {item.price.toFixed(2)}</p>
+                  <p>Item total: $ {(item.price * item.quantity).toFixed(2)}</p>
+                </div>
+
+                <div className="quantity-controls">
+                  <button type="button" onClick={() => dispatch(decreaseQuantity(item.id))}>
+                    -
+                  </button>
+                  <span>{item.quantity}</span>
+                  <button type="button" onClick={() => dispatch(increaseQuantity(item.id))}>
+                    +
+                  </button>
+                </div>
+
+                <button
+                  type="button"
+                  className="remove-item-btn"
+                  onClick={() => dispatch(removeFromCart(item.id))}
+                >
+                  Delete
+                </button>
+              </article>
+            ))}
+          </div>
+
+          <div className="checkout-actions">
+            <Link to="/plants" className="continue-shopping-btn">
+              Continue Shopping
+            </Link>
+            <button type="button" className="checkout-btn" onClick={handleCheckout}>
+              Checkout
+            </button>
+          </div>
+        </>
+      )}
+    </section>
+  );
+}
